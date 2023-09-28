@@ -12,6 +12,46 @@
 
 #include "get_next_line.h"
 
+static	char *rem_line(char *tmp)
+{
+	int		i;
+	int		c;
+	char	*ntmp;
+
+	i = 1;
+	c = 0;
+	while (tmp[i] != '\n')
+		i++;
+	ntmp = ft_strdup(tmp + i);
+	free(tmp);
+	return (ntmp);
+}
+
+static	char *set_line(char *tmp)
+{
+	char	*str;
+	int		c;
+	int		i;
+
+	c = 0;
+	i = 0;
+	while (tmp[c] && tmp[i] != '\n')
+		i++;
+	str = (char *)malloc(sizeof (char) * (i + 1));
+	if (tmp[c] && tmp[c] == '\n')
+	{
+		c++;
+		i = 0;
+		while (tmp[c] && tmp[c] != '\n')
+		{
+			str[i++] = tmp[c++];
+		}
+		str[i] = 0;
+		return (str);
+	}
+	return (0);
+}
+
 char	*get_next_line(int fd)
 {
 	char			*buf;
@@ -19,20 +59,22 @@ char	*get_next_line(int fd)
 	static char		*tmp = 0;
 	int				i;
 
-	i = 0;
-	if (!fd || !read(fd, buf, 1))
-		return (0);
-	str = (char *)malloc(BUFFER_SIZE + 1);
+	i = 1;
+	// if (!fd || !read(fd, buf, 0))
+	// 	return (0);
 	if (tmp != 0)
 	{
-		str = ft_strjoin(str, tmp);
-		// printf("\n%s\n", tmp);
-		tmp = 0;
+		while (tmp[i] != '\n')
+			i++;
+		str = set_line(tmp);
+		tmp = rem_line(tmp);
+		return (str);
 	}
 	buf = (char *)malloc(BUFFER_SIZE + 1);
+	str = (char *)malloc(BUFFER_SIZE + 1);
 	while ((read(fd, buf, BUFFER_SIZE)))
 	{
-		// buf[i + 1] = 0;
+		buf[BUFFER_SIZE + 1] = 0;
 		str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 		{
@@ -56,7 +98,7 @@ int	main(void)
 	fd = open("./test.txt", O_RDONLY);
 	while ((s = get_next_line(fd)))
 	{
-		printf("%s\n", s);
+		printf("%s", s);
 		free(s);
 	}
 	close (fd);
