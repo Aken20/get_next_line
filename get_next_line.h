@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 20:58:27 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/09/19 05:18:35 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/02 13:35:22 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,9 +17,10 @@
 # include <stdio.h>
 # include <unistd.h>
 # include <stdlib.h>
+# include <string.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1042
+#  define BUFFER_SIZE 500
 # endif
 
 char	*get_next_line(int fd);
