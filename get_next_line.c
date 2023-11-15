@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:12 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/15 04:42:44 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/15 05:15:19 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -24,12 +24,14 @@ static	char	*set_tmp(char *str)
 	c = ft_strlen(str) - i;
 	tmp = (char *)malloc(sizeof (char) * (c + 1));
 	c = 0;
+	i += 1;
 	while (str[i])
 	{
 		tmp[c] = str[i];
 		i++;
 		c++;
 	}
+	tmp[c] = 0;
 	return (tmp);
 }
 
@@ -62,10 +64,11 @@ static	char	*rem_line(char *tmp)
 	int		c;
 	char	*ntmp;
 
-	i = 1;
+	i = 0;
 	c = 0;
-	while (tmp[i] != '\n')
+	while (tmp[i] && tmp[i] != '\n')
 		i++;
+	i++;
 	ntmp = ft_strdup(tmp + i);
 	return (ntmp);
 }
@@ -81,16 +84,13 @@ static	char	*set_line(char *tmp)
 	while (tmp[i] && tmp[i] != '\n')
 		i++;
 	str = (char *)malloc(sizeof (char) * (i + 1));
-	if (tmp[c] && tmp[c] == '\n')
+	while (tmp[c] && tmp[c] != '\n')
 	{
+		str[c] = tmp[c];
 		c++;
-		i = 0;
-		while (tmp[c] && tmp[c] != '\n')
-			str[i++] = tmp[c++];
-		str[i] = 0;
-		return (str);
 	}
-	return (0);
+	str[c] = 0;
+	return (str);
 }
 
 char	*get_next_line(int fd)
@@ -140,9 +140,7 @@ int	main(void)
 	int		fd;
 
 	fd = open("./test.txt", O_RDONLY);
-	while((s = get_next_line(fd)))
-	{
+	while ((s = get_next_line(fd)))
 		printf("%s", s);
-	}
 	close (fd);
 }
