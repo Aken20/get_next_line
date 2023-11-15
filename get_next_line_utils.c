@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/02 13:34:49 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/15 04:22:56 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -83,8 +83,6 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[l1])
 		sjn[l++] = s2[l1++];
 	sjn[l] = 0;
-	// free(s1);
-	// free(s2);
 	return (sjn);
 }
 
@@ -108,16 +106,4 @@ char	*ft_strchr(const char *s, int c)
 		return (c_s);
 	}
 	return (NULL);
-}
-int main()
-{
-	char *s1;
-	char *s2;
-	char *s12;
-
-	s1 = "123";
-	s2 = "456";
-	s12 = ft_strjoin(s1, s2);
-	printf("%s  :s1=%zu  s2=%zu  s12=%zu  ", s12, strlen(s1), strlen(s2), strlen(s12));
-	return (0);
 }
