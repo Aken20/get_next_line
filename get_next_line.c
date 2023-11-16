@@ -108,7 +108,7 @@ char	*get_next_line(int fd)
 	{
 		if (!ft_strchr(tmp, '\n'))
 		{
-			while ((read(fd, buf, BUFFER_SIZE)))
+			while ((read(fd, buf, BUFFER_SIZE)) && (!ft_strchr(str, '\n')))
 			{
 				buf[BUFFER_SIZE + 1] = 0;
 				str = ft_strjoin(tmp, buf);
