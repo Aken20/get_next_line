@@ -6,141 +6,154 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:12 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/15 05:15:19 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/19 20:58:30 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-static	char	*set_tmp(char *str)
+static	char    *first_line(char *str)
 {
-	int		i;
-	int		c;
-	char	*tmp;
+    int     i;
+    int     c;
+    char    *new_str;
 
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	c = ft_strlen(str) - i;
-	tmp = (char *)malloc(sizeof (char) * (c + 1));
-	c = 0;
-	i += 1;
-	while (str[i])
-	{
-		tmp[c] = str[i];
-		i++;
-		c++;
-	}
-	tmp[c] = 0;
-	return (tmp);
-}
-
-static	char	*first_line(char *str)
-{
-	int		i;
-	char	*nstr;
-
-	i = 0;
-	while (str[i] && str[i] != '\n')
-		i++;
-	nstr = (char *)malloc(sizeof (char) * (i + 1));
-	if (!nstr)
-		return (0);
-	i = 0;
-	while (str[i] && str[i] != '\n')
-	{
-		nstr[i] = str[i];
-		i++;
-	}
+    i = 0;
+    c = 0;
+    if (!str)
+        return (0);
+    while(str[c] && str[c] != '\n')
+        c++;
+    if (str[c] == '\n')
+        c++;
+    new_str = (char *)malloc(sizeof (char) * (c + 1));
+    while(str[i] && str[i] != '\n')
+    {
+        new_str[i] = str[i];
+        i++;
+    }
 	if (str[i] == '\n')
-		nstr[i++] = '\n';
-	nstr[i] = 0;
-	return (nstr);
+    	new_str[i++] = '\n';
+	new_str[i] = 0;
+    return (new_str);
 }
 
-static	char	*rem_line(char *tmp)
+static	char    *set_tmp(char *str)
 {
-	int		i;
-	int		c;
-	char	*ntmp;
-
-	i = 0;
-	c = 0;
-	while (tmp[i] && tmp[i] != '\n')
-		i++;
-	i++;
-	ntmp = ft_strdup(tmp + i);
-	return (ntmp);
+    int     i;
+    char    *tmp;
+    
+    i = 0;
+    while(str[i] && str[i] != '\n')
+        i++;
+    if (str[i] && str[i] == '\n')
+       i++;
+    //if (str[i])
+    //{
+        tmp = ft_strdup(str + i);
+        return (tmp);
+    //}
+    //return (0);
 }
 
-static	char	*set_line(char *tmp)
+static	char    *print_line(char *str, char *buf, int fd)
 {
-	char	*str;
-	int		c;
-	int		i;
+    static char		*tmp;
 
-	c = 0;
-	i = 0;
-	while (tmp[i] && tmp[i] != '\n')
-		i++;
-	str = (char *)malloc(sizeof (char) * (i + 1));
-	while (tmp[c] && tmp[c] != '\n')
+    if (tmp && ft_strchr(tmp + 1, '\n'))
+        {
+            str = first_line(tmp);
+            tmp = set_tmp(tmp);
+            return (str);
+        }
+    else if (tmp && !ft_strchr(tmp + 1, '\n'))
+        str = strdup(tmp);
+	while ((read(fd, buf, BUFFER_SIZE)))
 	{
-		str[c] = tmp[c];
-		c++;
-	}
-	str[c] = 0;
-	return (str);
+        buf[BUFFER_SIZE + 1] = 0;
+		str = ft_strjoin(str, buf);
+		if (ft_strchr(str, '\n'))
+		{
+			tmp = set_tmp(str);
+			return (first_line(str));
+		}
+		ft_bzero(buf);
+    }
+    tmp = set_tmp(str);
+    return (first_line(tmp));
 }
 
 char	*get_next_line(int fd)
 {
+    char			*buf;
+	char			*str;
+
+    buf = (char *)malloc(BUFFER_SIZE + 1);
+	if (!buf)
+		return (0);
+    str = 0;
+    return (print_line(str, buf, fd));
+}
+
+/*char	*get_next_line(int fd)
+{
 	char			*buf;
 	char			*str;
 	static char		*tmp;
+	int				i;
 
+	i = 1;
 	if (!fd)
 		return (0);
+	if (tmp)
+    {
+        if (ft_strchr(tmp + 1, '\n'))
+        {
+            str = first_line(tmp);
+            tmp = set_tmp(tmp);
+            return (str);
+        }
+        else
+            str = strdup(tmp);
+    }
 	buf = (char *)malloc(BUFFER_SIZE + 1);
 	if (!buf)
 		return (0);
-	if (tmp)
-	{
-		if (!ft_strchr(tmp, '\n'))
-		{
-			while ((read(fd, buf, BUFFER_SIZE)) && (!ft_strchr(str, '\n')))
-			{
-				buf[BUFFER_SIZE + 1] = 0;
-				str = ft_strjoin(tmp, buf);
-			}
-		}
-		str = set_line(tmp);
-		tmp = rem_line(tmp);
-		return (str);
-	}
-	while ((read(fd, buf, BUFFER_SIZE)))
+	while ((i = read(fd, buf, BUFFER_SIZE)))
 	{
 		buf[BUFFER_SIZE + 1] = 0;
 		str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 		{
+			// free(buf);
 			tmp = set_tmp(str);
-			str = first_line(str);
-			return (str);
+			return (first_line(str));
 		}
 		ft_bzero(buf);
 	}
 	free(buf);
-	return (str);
-}
+    if (tmp != 0)
+	{
+		tmp = 0;
+        return(str);
+	}
+	return (0);
+}*/
 
 int	main(void)
 {
 	char	*s;
 	int		fd;
+    int     i;
 
+    i = 1;
 	fd = open("./test.txt", O_RDONLY);
-	while ((s = get_next_line(fd)))
-		printf("%s", s);
+	s = get_next_line(fd);
+	while (s != NULL)
+	{
+    	printf("%d:%s", i, s);
+		s = get_next_line(fd);
+       i++;
+   }
 	close (fd);
 }
