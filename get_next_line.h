@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aken <aken@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 20:58:27 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/17 08:14:42 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/20 05:41:55 by aken             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,14 +20,14 @@
 # include <string.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 4
+#  define BUFFER_SIZE 1024
 # endif
 
 char	*get_next_line(int fd);
 void	*ft_bzero(char *s);
 size_t	ft_strlen(const char *s);
-char	*ft_strdup(const char *s);
+char	*ft_strdup(char *s);
 char	*ft_strjoin(char *s1, char *s2);
-char	*ft_strchr(const char *s, int c);
+char	*ft_strchr(char *s, int c);
 
 #endif

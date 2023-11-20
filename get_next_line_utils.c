@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
+/*   By: aken <aken@student.42.fr>                  +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/15 04:22:56 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/20 05:28:16 by aken             ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -35,7 +35,7 @@ size_t	ft_strlen(const char *s)
 	return (len);
 }
 
-char	*ft_strdup(const char *s)
+char	*ft_strdup(char *s)
 {
 	size_t	i;
 	size_t	n;
@@ -48,12 +48,13 @@ char	*ft_strdup(const char *s)
 	if (!dup)
 		return (0);
 	i = 0;
-	while (i < n)
+	while (s[i])
 	{
 		dup[i] = s[i];
 		i++;
 	}
 	dup[i] = '\0';
+	//free(s);
 	return (dup);
 }
 
@@ -83,10 +84,12 @@ char	*ft_strjoin(char *s1, char *s2)
 	while (s2[l1])
 		sjn[l++] = s2[l1++];
 	sjn[l] = 0;
+	if (s1)
+		free(s1);
 	return (sjn);
 }
 
-char	*ft_strchr(const char *s, int c)
+char	*ft_strchr(char *s, int c)
 {
 	char	*c_s;
 
