@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line_utils.c                              :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aken <aken@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/20 05:28:16 by aken             ###   ########.fr       */
+/*   Updated: 2023/11/21 00:32:04 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -48,13 +48,12 @@ char	*ft_strdup(char *s)
 	if (!dup)
 		return (0);
 	i = 0;
-	while (s[i])
+	while (i < n)
 	{
 		dup[i] = s[i];
 		i++;
 	}
-	dup[i] = '\0';
-	//free(s);
+	dup[n] = '\0';
 	return (dup);
 }
 

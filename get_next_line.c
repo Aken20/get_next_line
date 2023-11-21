@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.c                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aken <aken@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/20 05:46:36 by aken             ###   ########.fr       */
+/*   Updated: 2023/11/21 01:02:05 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -33,9 +33,9 @@ static	char	*first_line(char *str)
 		i++;
 	}
 	if (str[i] == '\n')
-		new_str[i++] = '\n';
-	new_str[i] = 0;
-	return (new_str);
+		new_str[i] = '\n';
+	new_str[c] = 0;
+	return (free(str), new_str);
 }
 
 static	char	*set_tmp(char *str)
@@ -48,6 +48,8 @@ static	char	*set_tmp(char *str)
 		i++;
 	if (str[i] && str[i] == '\n')
 		i++;
+	if (!str[i])
+		return (0);
 	tmp = ft_strdup(str + i);
 	return (tmp);
 }
@@ -55,18 +57,20 @@ static	char	*set_tmp(char *str)
 static	char	*print_line(char *str, char *buf, int fd)
 {
 	static char		*tmp;
+	int				i;
 
-	if (tmp != 0 && ft_strchr(tmp + 1, '\n'))
+	i = 1;
+	if (tmp && ft_strchr(tmp + 1, '\n'))
 	{
 		str = first_line(tmp);
 		tmp = set_tmp(tmp);
-		return (str);
+		return (free(buf), str);
 	}
 	else if (tmp != 0 && !ft_strchr(tmp + 1, '\n'))
 		str = strdup(tmp);
-	while ((read(fd, buf, BUFFER_SIZE)))
+	while ((i = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
-		buf[BUFFER_SIZE + 1] = 0;
+		buf[BUFFER_SIZE] = 0;
 		str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 		{
@@ -75,11 +79,11 @@ static	char	*print_line(char *str, char *buf, int fd)
 		}
 		ft_bzero(buf);
 	}
-	free(buf);
-	tmp = set_tmp(str);
-	if (str[0] != '\0')
-		return (first_line(str));
-	return (free(tmp), 0);
+	if (!str && i <= 0)
+		return (free(buf), free(str), NULL);
+	if (str)
+		return (free(buf), str);
+	return (free(buf), free(str), NULL);
 }
 
 char	*get_next_line(int fd)
@@ -87,69 +91,29 @@ char	*get_next_line(int fd)
 	char			*buf;
 	char			*str;
 
-	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483648)
+	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
 		return (NULL);
-	buf = (char *)malloc(BUFFER_SIZE + 1);
+	buf = (char *)malloc(sizeof (char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (0);
 	str = 0;
 	return (print_line(str, buf, fd));
 }
 
-/*char	*get_next_line(int fd)
-{
-	char			*buf;
-	char			*str;
-	static char		*tmp;
-	int				i;
+// int	main(void)
+// {
+// 	char	*s;
+// 	int		fd;
+// 	int		i;
 
-	i = 1;
-	if (!fd)
-		return (0);
-	if (tmp)
-	{
-		if (ft_strchr(tmp + 1, '\n'))
-		{
-			str = first_line(tmp);
-			tmp = set_tmp(tmp);
-			return (str);
-		}
-		else
-			str = strdup(tmp);
-	}
-	buf = (char *)malloc(BUFFER_SIZE + 1);
-	if (!buf)
-		return (0);
-	while  ((i = read(fd, buf, BUFFER_SIZE)))
-	{
-		buf[BUFFER_SIZE + 1] = 0;
-		str = ft_strjoin(str, buf);
-		if (ft_strchr(str, '\n'))
-		{
-			// free(buf);
-			tmp = set_tmp(str);
-			return (first_line(str));
-		}
-		ft_bzero(buf);
-	}
-	free(buf);
-	if (tmp != 0)
-	{
-		tmp = 0;
-		return(str);
-	}
-	return (0);
-}*/
-
-int	main(void)
-{
-	char	*s;
-	int		fd;
-	int		i;
-
-	i = 1;
-	fd = open("./test.txt", O_RDONLY);
-	s = get_next_line(fd);
-		printf("%d:%s", i, s);
-	close (fd);
-}
+// 	i = 1;
+// 	fd = open("./test.txt", O_RDONLY);
+// 	s = get_next_line(fd);
+// 	while(s)
+// 	{
+// 		printf("%d: %s", i, s);
+// 		s = get_next_line(fd);
+// 		i++;
+// 	}
+// 	close (fd);
+// }

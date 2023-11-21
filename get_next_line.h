@@ -3,10 +3,10 @@
 /*                                                        :::      ::::::::   */
 /*   get_next_line.h                                    :+:      :+:    :+:   */
 /*                                                    +:+ +:+         +:+     */
-/*   By: aken <aken@student.42.fr>                  +#+  +:+       +#+        */
+/*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 20:58:27 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/20 05:41:55 by aken             ###   ########.fr       */
+/*   Updated: 2023/11/21 00:51:31 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -20,7 +20,7 @@
 # include <string.h>
 
 # ifndef BUFFER_SIZE
-#  define BUFFER_SIZE 1024
+#  define BUFFER_SIZE 10
 # endif
 
 char	*get_next_line(int fd);
