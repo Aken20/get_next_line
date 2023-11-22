@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 20:58:27 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/21 00:51:31 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/22 12:51:08 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -26,7 +26,7 @@
 char	*get_next_line(int fd);
 void	*ft_bzero(char *s);
 size_t	ft_strlen(const char *s);
-char	*ft_strdup(char *s);
+char	*ft_strdup(char *s, int k);
 char	*ft_strjoin(char *s1, char *s2);
 char	*ft_strchr(char *s, int c);
 

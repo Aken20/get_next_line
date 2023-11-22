@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/21 01:02:05 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/22 22:28:04 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -21,69 +21,76 @@ static	char	*first_line(char *str)
 	i = 0;
 	c = 0;
 	if (!str)
-		return (0);
+		return (NULL);
 	while (str[c] && str[c] != '\n')
 		c++;
-	if (str[c] == '\n')
+	if (str[c] && str[c] == '\n')
 		c++;
-	new_str = (char *)malloc(sizeof (char) * (c + 1));
+	new_str = (char *)malloc(sizeof(char) * (c + 1));
 	while (str[i] && str[i] != '\n')
 	{
 		new_str[i] = str[i];
 		i++;
 	}
 	if (str[i] == '\n')
-		new_str[i] = '\n';
-	new_str[c] = 0;
-	return (free(str), new_str);
+		new_str[i++] = '\n';
+	new_str[i] = 0;
+	return (new_str);
 }
 
-static	char	*set_tmp(char *str)
+static	char	*set_tmp(char *str, int k)
 {
 	int		i;
 	char	*tmp;
 
 	i = 0;
+	if (!str)
+		return (0);
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] && str[i] == '\n')
 		i++;
 	if (!str[i])
-		return (0);
-	tmp = ft_strdup(str + i);
+		return (free(str), NULL);
+	tmp = ft_strdup(str + i, 0);
+	if (k == 1)
+		free(str);
+	if (!tmp)
+		return (NULL);
 	return (tmp);
 }
 
-static	char	*print_line(char *str, char *buf, int fd)
+static char	*print_line(char *str, char *buf, int fd)
 {
-	static char		*tmp;
-	int				i;
+	static char	*tmp;
+	int			i;
+	char		*line;
 
-	i = 1;
 	if (tmp && ft_strchr(tmp + 1, '\n'))
 	{
-		str = first_line(tmp);
-		tmp = set_tmp(tmp);
-		return (free(buf), str);
+		line = first_line(tmp);
+		tmp = set_tmp(tmp, 1);
+		return (free(buf), line);
 	}
-	else if (tmp != 0 && !ft_strchr(tmp + 1, '\n'))
-		str = strdup(tmp);
+	else if (tmp)
+		str = ft_strdup(tmp, 1);
 	while ((i = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
-		buf[BUFFER_SIZE] = 0;
+		buf[i] = '\0';
 		str = ft_strjoin(str, buf);
 		if (ft_strchr(str, '\n'))
 		{
-			tmp = set_tmp(str);
-			return (free(buf), first_line(str));
+			line = first_line(str);
+			tmp = set_tmp(str, 1);
+			return (free(buf), line);
 		}
 		ft_bzero(buf);
 	}
-	if (!str && i <= 0)
-		return (free(buf), free(str), NULL);
+	line = first_line(str);
+	tmp = set_tmp(str, 1);
 	if (str)
-		return (free(buf), str);
-	return (free(buf), free(str), NULL);
+		return (free(buf), line);
+	return (free(buf), free(tmp), free(str), NULL);
 }
 
 char	*get_next_line(int fd)
@@ -109,11 +116,13 @@ char	*get_next_line(int fd)
 // 	i = 1;
 // 	fd = open("./test.txt", O_RDONLY);
 // 	s = get_next_line(fd);
-// 	while(s)
+// 	while (s != 0)
 // 	{
 // 		printf("%d: %s", i, s);
+// 		free(s);
 // 		s = get_next_line(fd);
 // 		i++;
 // 	}
+// 	free(s);
 // 	close (fd);
 // }
