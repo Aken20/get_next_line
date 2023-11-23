@@ -6,20 +6,20 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/23 00:13:55 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/23 21:10:12 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
 #include "get_next_line.h"
 
-void	*ft_bzero(char *s)
+void	*ft_bzero(char *s, int n)
 {
 	int		i;
 
 	i = 0;
-	while (s[i])
+	while (i <= n)
 	{
-		s[i] = 0;
+		s[i] = '\0';
 		i++;
 	}
 	return (s);
@@ -66,7 +66,7 @@ char	*ft_strjoin(char *s1, char *s2)
 	char	*sjn;
 
 	if (!s1 && !s2)
-		return (ft_strdup("", 0));
+		return (NULL);
 	if (!s2)
 		return (ft_strdup(s1, 1));
 	if (!s1)
@@ -86,17 +86,24 @@ char	*ft_strjoin(char *s1, char *s2)
 	return (free(s1), sjn);
 }
 
-char	*ft_strchr(char *s, int c)
+char	*ft_strchr(const char *s, int c)
 {
-	int		i;
+	char	*c_s;
 
-	i = 0;
-	while (s[i])
+	while (*s)
 	{
-		if (s[i] != (char)c)
-			i++;
-		if (s[i] && s[i] == (char)c)
-			return (s + i);
+		if (*s != (char)c)
+			++s;
+		else
+		{
+			c_s = (char *) s;
+			return (c_s);
+		}
+	}
+	if (*s == (char)c)
+	{
+		c_s = (char *) s;
+		return (c_s);
 	}
 	return (NULL);
 }
