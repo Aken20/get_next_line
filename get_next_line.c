@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/22 22:28:04 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/23 03:06:26 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -27,6 +27,8 @@ static	char	*first_line(char *str)
 	if (str[c] && str[c] == '\n')
 		c++;
 	new_str = (char *)malloc(sizeof(char) * (c + 1));
+	if (!new_str)
+		return (NULL);
 	while (str[i] && str[i] != '\n')
 	{
 		new_str[i] = str[i];
@@ -38,7 +40,7 @@ static	char	*first_line(char *str)
 	return (new_str);
 }
 
-static	char	*set_tmp(char *str, int k)
+static	char	*set_tmp(char *str)
 {
 	int		i;
 	char	*tmp;
@@ -53,8 +55,7 @@ static	char	*set_tmp(char *str, int k)
 	if (!str[i])
 		return (free(str), NULL);
 	tmp = ft_strdup(str + i, 0);
-	if (k == 1)
-		free(str);
+	free(str);
 	if (!tmp)
 		return (NULL);
 	return (tmp);
@@ -69,11 +70,10 @@ static char	*print_line(char *str, char *buf, int fd)
 	if (tmp && ft_strchr(tmp + 1, '\n'))
 	{
 		line = first_line(tmp);
-		tmp = set_tmp(tmp, 1);
+		tmp = set_tmp(tmp);
 		return (free(buf), line);
 	}
-	else if (tmp)
-		str = ft_strdup(tmp, 1);
+	str = ft_strdup(tmp, 1);
 	while ((i = read(fd, buf, BUFFER_SIZE)) > 0)
 	{
 		buf[i] = '\0';
@@ -81,13 +81,13 @@ static char	*print_line(char *str, char *buf, int fd)
 		if (ft_strchr(str, '\n'))
 		{
 			line = first_line(str);
-			tmp = set_tmp(str, 1);
+			tmp = set_tmp(str);
 			return (free(buf), line);
 		}
 		ft_bzero(buf);
 	}
 	line = first_line(str);
-	tmp = set_tmp(str, 1);
+	tmp = set_tmp(str);
 	if (str)
 		return (free(buf), line);
 	return (free(buf), free(tmp), free(str), NULL);

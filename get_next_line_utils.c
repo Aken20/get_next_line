@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/22 11:50:41 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/23 00:13:55 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -88,22 +88,15 @@ char	*ft_strjoin(char *s1, char *s2)
 
 char	*ft_strchr(char *s, int c)
 {
-	char	*c_s;
+	int		i;
 
-	while (*s)
+	i = 0;
+	while (s[i])
 	{
-		if (*s != (char)c)
-			++s;
-		else
-		{
-			c_s = (char *) s;
-			return (c_s);
-		}
-	}
-	if (*s == (char)c)
-	{
-		c_s = (char *) s;
-		return (c_s);
+		if (s[i] != (char)c)
+			i++;
+		if (s[i] && s[i] == (char)c)
+			return (s + i);
 	}
 	return (NULL);
 }
