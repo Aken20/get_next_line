@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/23 21:10:12 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/25 21:32:56 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -17,6 +17,8 @@ void	*ft_bzero(char *s, int n)
 	int		i;
 
 	i = 0;
+	if (!s)
+		return (NULL);
 	while (i <= n)
 	{
 		s[i] = '\0';
@@ -25,7 +27,7 @@ void	*ft_bzero(char *s, int n)
 	return (s);
 }
 
-size_t	ft_strlen(const char *s)
+size_t	ft_strlen(char *s)
 {
 	size_t	len;
 
@@ -41,9 +43,11 @@ char	*ft_strdup(char *s, int k)
 	size_t	n;
 	char	*dup;
 
-	if (!s)
+	if (!s || s[0] == '\0')
 		return (NULL);
 	n = ft_strlen(s);
+	if (n == 0)
+		return (NULL);
 	dup = malloc(sizeof(char) * (n + 1));
 	if (!dup)
 		return (0);
@@ -54,7 +58,7 @@ char	*ft_strdup(char *s, int k)
 		i++;
 	}
 	dup[n] = '\0';
-	if (k == 1)
+	if (k == 1 && s != NULL)
 		free(s);
 	return (dup);
 }

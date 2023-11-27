@@ -6,7 +6,7 @@
 /*   By: ahibrahi <ahibrahi@student.42.fr>          +#+  +:+       +#+        */
 /*                                                +#+#+#+#+#+   +#+           */
 /*   Created: 2023/09/18 21:00:19 by ahibrahi          #+#    #+#             */
-/*   Updated: 2023/11/23 22:52:17 by ahibrahi         ###   ########.fr       */
+/*   Updated: 2023/11/26 01:19:32 by ahibrahi         ###   ########.fr       */
 /*                                                                            */
 /* ************************************************************************** */
 
@@ -14,14 +14,12 @@
 
 static	char	*first_line(char *str)
 {
-	int		i;
 	int		c;
 	char	*new_str;
 
-	i = 0;
 	c = 0;
 	if (!str)
-		return (NULL);
+		return (free(str), NULL);
 	while (str[c] && str[c] != '\n')
 		c++;
 	if (str[c] && str[c] == '\n')
@@ -29,14 +27,15 @@ static	char	*first_line(char *str)
 	new_str = (char *)malloc(sizeof(char) * (c + 1));
 	if (!new_str)
 		return (NULL);
-	while (str[i] && str[i] != '\n')
+	c = 0;
+	while (str[c] && str[c] != '\n')
 	{
-		new_str[i] = str[i];
-		i++;
+		new_str[c] = str[c];
+		c++;
 	}
-	if (str[i] == '\n')
-		new_str[i++] = '\n';
-	new_str[i] = 0;
+	if (str[c] == '\n')
+		new_str[c++] = '\n';
+	new_str[c] = 0;
 	return (new_str);
 }
 
@@ -47,7 +46,7 @@ static	char	*set_tmp(char *str)
 
 	i = 0;
 	if (!str)
-		return (free(str), NULL);
+		return (NULL);
 	while (str[i] && str[i] != '\n')
 		i++;
 	if (str[i] && str[i] == '\n')
@@ -61,33 +60,31 @@ static	char	*set_tmp(char *str)
 	return (tmp);
 }
 
-static char	*print_line(char *str, char *buf, int fd)
+static char	*print_line(char *str, char *buf, int fd, int i)
 {
 	static char	*tmp;
-	int			i;
 	char		*line;
 
-	if (tmp && ft_strchr(tmp + 1, '\n'))
+	if (tmp)
+		str = ft_strdup(tmp, 1);
+	while (i > 0)
 	{
-		line = first_line(tmp);
-		tmp = set_tmp(tmp);
-		return (free(buf), line);
-	}
-	str = ft_strdup(tmp, 1);
-	while ((i = read(fd, buf, BUFFER_SIZE)) > 0)
-	{
+		i = read(fd, buf, BUFFER_SIZE);
+		if (i < 0)
+			return (free(buf), NULL);
 		buf[i] = '\0';
 		str = ft_strjoin(str, buf);
+		if (!str || !*str)
+			return (free(buf), free(str), NULL);
 		if (ft_strchr(str, '\n'))
 			break ;
-		ft_bzero(buf, BUFFER_SIZE);
+		ft_bzero(buf, i);
 	}
-	free(buf);
-	if (i < 0)
-		return (0);
 	line = first_line(str);
 	tmp = set_tmp(str);
-	return (line);
+	return (free(buf), line);
+	if (i < 0)
+		return (free(buf), NULL);
 }
 
 char	*get_next_line(int fd)
@@ -97,29 +94,10 @@ char	*get_next_line(int fd)
 
 	if (fd < 0 || BUFFER_SIZE <= 0 || BUFFER_SIZE >= 2147483647)
 		return (NULL);
+	buf = NULL;
 	buf = (char *)malloc(sizeof (char) * BUFFER_SIZE + 1);
 	if (!buf)
 		return (0);
-	str = 0;
-	return (print_line(str, buf, fd));
+	str = NULL;
+	return (print_line(str, buf, fd, 1));
 }
-
-// int	main(void)
-// {
-// 	char	*s;
-// 	int		fd;
-// 	int		i;
-
-// 	i = 1;
-// 	fd = open("./test.txt", O_RDONLY);
-// 	s = get_next_line(fd);
-// 	while (s != 0)
-// 	{
-// 		printf("%d: %s", i, s);
-// 		free(s);
-// 		s = get_next_line(fd);
-// 		i++;
-// 	}
-// 	free(s);
-// 	close (fd);
-// }
